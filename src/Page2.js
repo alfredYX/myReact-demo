@@ -124,7 +124,7 @@ render(){
                             <button style={page2Style} onClick={ () => this.editHandle(idx)}>{item.editHandle?'保存':'修改'}</button>
                             <button style={page2Style} onClick={ () => this.delHandle(idx)}>删除</button>
                             </p>
-                            <p>价格:{item.price}</p>
+                            <p>价格:{item.price} 元</p>
                             <p>日期:{item.date}</p>                          
                         </li>
                     )
