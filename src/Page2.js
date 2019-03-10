@@ -4,13 +4,13 @@ import moment from 'moment'
 import  "./page2.css"
 
 class Page2 extends React.Component{
-    constructor(props){ //构造函数
+    constructor(props){ //构造函数 
         super(props);
             this.state = {
                 mytext : '',
                 myjson : [],
                 textInput:'',
-                textMoney:''
+                textMoney:'',
             }
         }
         getData(){ //请求数据函数
