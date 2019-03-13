@@ -76,17 +76,18 @@ class Page2 extends React.Component{
                 }
 
                 editHandle(idx){
-                    // 为true的时候保存操作
-                    if(this.state.myjson[idx].editHandle){
-                        
-                    }
-                    this.state.myjson[idx].editHandle = !this.state.myjson[idx].editHandle
-                    this.setState({myjson:this.state.myjson})
+                    // 为true的时候保存操作 
+                    // this.state.myjson[idx].editHandle = !this.state.myjson[idx].editHandle
+                    // react 不允许直接修改state属性 要通过setState 所以要先赋值一个新的变量                    
+                    let updateMyjson = [...this.state.myjson]
+                    updateMyjson[idx].editHandle = !updateMyjson[idx].editHandle
+                    this.setState({myjson:updateMyjson})
                 }
                 
                 itemInputHandle(ev,idx){
-                    this.state.myjson[idx].name = ev.target.value
-                    this.setState({myjson:this.state.myjson})
+                    let updateMyjson = [...this.state.myjson]
+                    updateMyjson.name = ev.target.value
+                    this.setState({myjson:updateMyjson})
                 }
 
                 delHandle(idx){
