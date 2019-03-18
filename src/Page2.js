@@ -24,7 +24,7 @@ class Page2 extends React.Component{
             }
 
             getJsonData(){ //请求数据函数
-                fetch(`http://127.0.0.1:8081/json`,{
+                fetch(`http://127.0.0.1:8081/get`,{
                 method: 'GET'
                 }).then(res => res.json()).then(
                 data => {
@@ -65,9 +65,21 @@ class Page2 extends React.Component{
                         date : `${moment().format("YYYY年MM月DD日")}`,
                         editHandle:false
                     }
-                    this.state.myjson.push(obj)
-                    this.setState({myjson:this.state.myjson})
-
+                    fetch(`http://127.0.0.1:8081/add`,{
+                        method: 'POST',
+                        headers:{
+                            'Content-Type': 'application/json',
+                        },
+                        body:JSON.stringify(obj)
+                        }).then(res => res.json()).then(data => {
+                           console.info(data)
+                           if(data.code === 200){
+                               console.info(data.msg)
+                               this.getJsonData()
+                           }
+                        }
+                    ).catch(e => console.log('错误:', e))
+                
                     this.clearInput()
                 }
 
@@ -76,35 +88,77 @@ class Page2 extends React.Component{
                 }
 
                 editHandle(idx){
-                    // 为true的时候保存操作 
                     // this.state.myjson[idx].editHandle = !this.state.myjson[idx].editHandle
                     // react 不允许直接修改state属性 要通过setState 所以要先赋值一个新的变量                    
                     let updateMyjson = [...this.state.myjson]
-                    updateMyjson[idx].editHandle = !updateMyjson[idx].editHandle
-                    this.setState({myjson:updateMyjson})
+                    // 为true的时候保存操作                     
+                    if(updateMyjson[idx].editHandle){
+                        fetch(`http://127.0.0.1:8081/edit`,{
+                        method: 'POST',
+                        headers:{
+                            'Content-Type': 'application/json',
+                        },
+                        body:JSON.stringify({_id:this.state.myjson[idx]._id,name:this.state.myjson[idx].name})
+                        }).then(res => res.json()).then(data => {
+                           console.info(data)
+                           if(data.code === 200){
+                               console.info(data.msg)
+                               this.getJsonData()
+                           }
+                        }
+                    ).catch(e => console.log('错误:', e))
+                    }else{
+                        updateMyjson.forEach( t => {
+                            t.editHandle = false
+                        })
+                        updateMyjson[idx].editHandle = !updateMyjson[idx].editHandle
+                        this.setState({myjson:updateMyjson})
+                    }
+                
                 }
                 
+                cancel(idx){
+                    let cancelMyjson = [...this.state.myjson]
+                    cancelMyjson[idx].editHandle = !cancelMyjson[idx].editHandle
+                    this.setState({myjson:cancelMyjson})
+                }
+
                 itemInputHandle(ev,idx){
                     let updateMyjson = [...this.state.myjson]
-                    updateMyjson.name = ev.target.value
-                    this.setState({myjson:updateMyjson})
+                    updateMyjson[idx].name = ev.target.value
+                    this.setState({myjson:updateMyjson})    
                 }
 
                 delHandle(idx){
-                    this.state.myjson.splice(idx,1)
-                    this.setState({myjson:this.state.myjson})
+                    fetch(`http://127.0.0.1:8081/delete`,{
+                        method: 'POST',
+                        headers:{
+                            'Content-Type': 'application/json',
+                        },
+                        body:JSON.stringify({_id:this.state.myjson[idx]._id})
+                        }).then(res => res.json()).then(data => {
+                           console.info(data)
+                           if(data.code === 200){
+                               console.info(data.msg)
+                               this.getJsonData()
+                           }
+                        }
+                    ).catch(e => console.log('错误:', e))
+                    // this.state.myjson.splice(idx,1)                    
+                    // this.setState({myjson:this.state.myjson})
                 }
 
             componentWillMount(){
                 this.getData()
                 this.getJsonData()
-                }
+            }
 
 render(){
     let page2Style={
         marginLeft:'10px'
     }
-    let tempName = ''    
+    let tempName = ''   
+    let handleButton = ''
     return(
         <div>
             <div>{this.state.mytext}
@@ -119,12 +173,17 @@ render(){
                     }else{
                         tempName = <span>名称:{item.name}</span>                            
                     }
+                    if(!item.editHandle){
+                        handleButton = <button style={page2Style} onClick={ () => this.delHandle(idx)}>删除</button>
+                    }else{
+                        handleButton = <button style={page2Style} onClick={ () => this.cancel(idx)}>取消</button>
+                    }
                     return  (
                         <li key={idx}>
                             <p>
                             {tempName}
                             <button style={page2Style} onClick={ () => this.editHandle(idx)}>{item.editHandle?'保存':'修改'}</button>
-                            <button style={page2Style} onClick={ () => this.delHandle(idx)}>删除</button>
+                            {handleButton}
                             </p>
                             <p>价格:{item.price} 元</p>
                             <p>日期:{item.date}</p>                          
