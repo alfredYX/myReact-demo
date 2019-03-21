@@ -93,12 +93,17 @@ class Page2 extends React.Component{
                     let updateMyjson = [...this.state.myjson]
                     // 为true的时候保存操作                     
                     if(updateMyjson[idx].editHandle){
+                        let params = {
+                            _id:this.state.myjson[idx]._id,
+                            name:this.state.myjson[idx].name,
+                            price:this.state.myjson[idx].price
+                        }
                         fetch(`http://127.0.0.1:8081/edit`,{
                         method: 'POST',
                         headers:{
                             'Content-Type': 'application/json',
                         },
-                        body:JSON.stringify({_id:this.state.myjson[idx]._id,name:this.state.myjson[idx].name})
+                        body:JSON.stringify(params)
                         }).then(res => res.json()).then(data => {
                            console.info(data)
                            if(data.code === 200){
@@ -123,10 +128,15 @@ class Page2 extends React.Component{
                     this.setState({myjson:cancelMyjson})
                 }
 
-                itemInputHandle(ev,idx){
+                itemNameInputHandle(ev,idx){
                     let updateMyjson = [...this.state.myjson]
                     updateMyjson[idx].name = ev.target.value
                     this.setState({myjson:updateMyjson})    
+                }
+                itemPriceInputHandle(ev,idx){
+                    let updateMyjson = [...this.state.myjson]
+                    updateMyjson[idx].price = ev.target.value
+                    this.setState({myjson:updateMyjson})   
                 }
 
                 delHandle(idx){
@@ -144,8 +154,6 @@ class Page2 extends React.Component{
                            }
                         }
                     ).catch(e => console.log('错误:', e))
-                    // this.state.myjson.splice(idx,1)                    
-                    // this.setState({myjson:this.state.myjson})
                 }
 
             componentWillMount(){
@@ -158,6 +166,7 @@ render(){
         marginLeft:'10px'
     }
     let tempName = ''   
+    let tempPrice = ''
     let handleButton = ''
     return(
         <div>
@@ -169,9 +178,11 @@ render(){
             <ul>
                 {this.state.myjson.map( (item,idx) => {
                     if(item.editHandle){
-                        tempName = <input type="text" value={item.name} onChange={ (ev) => {this.itemInputHandle(ev,idx)}}/>
+                        tempName = <input type="text" value={item.name} onChange={ (ev) => {this.itemNameInputHandle(ev,idx)}}/>
+                        tempPrice = <input type="text" value={item.price} onChange={ (ev) => {this.itemPriceInputHandle(ev,idx)}}/>                        
                     }else{
-                        tempName = <span>名称:{item.name}</span>                            
+                        tempName = <span>名称:{item.name}</span>   
+                        tempPrice = <span>价格:{item.price}</span>               
                     }
                     if(!item.editHandle){
                         handleButton = <button style={page2Style} onClick={ () => this.delHandle(idx)}>删除</button>
@@ -185,7 +196,9 @@ render(){
                             <button style={page2Style} onClick={ () => this.editHandle(idx)}>{item.editHandle?'保存':'修改'}</button>
                             {handleButton}
                             </p>
-                            <p>价格:{item.price} 元</p>
+                            <p>
+                                {tempPrice}
+                            </p>
                             <p>日期:{item.date}</p>                          
                         </li>
                     )
