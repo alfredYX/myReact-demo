@@ -21,9 +21,9 @@ class Page2 extends React.Component{
             this.setState({mytext:data})
             }
             ).catch(e => console.log('错误:', e))
-            }
+        }
 
-            getJsonData(){ //请求数据函数
+        getJsonData(){ //请求数据函数
                 fetch(`http://127.0.0.1:8081/get`,{
                 method: 'GET'
                 }).then(res => res.json()).then(
@@ -39,7 +39,7 @@ class Page2 extends React.Component{
                     }
                 }
                 ).catch(e => console.log('错误:', e))
-                }
+        }
 
                 inputNameHandle(event){
                     this.setState({textInput:event.target.value})
