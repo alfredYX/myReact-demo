@@ -28,7 +28,6 @@ class Page2 extends React.Component{
                 method: 'GET'
                 }).then(res => res.json()).then(
                 data => {
-                    console.info(data)
                     if(data.code === 200){
                         data.data.forEach ( item => {
                             item.editHandle = false
