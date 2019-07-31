@@ -1,0 +1,11 @@
+.app{
+    overflow:hidden;
+    display: flex;
+}
+.sideBar{
+    flex:1;
+}
+.content{
+    flex:2;
+ };
+ 

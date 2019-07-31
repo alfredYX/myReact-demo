@@ -12,7 +12,7 @@ return(
     <div className="page1Style" style={page1Style}>This is Page1!</div>
 <div>
             <Link to="/">
-            <div>返回</div>
+                <div>返回</div>
             </Link>
 </div>
 </div>
