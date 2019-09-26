@@ -14,7 +14,7 @@ class Page2 extends React.Component{
             }
         }
         getData(){ //请求数据函数
-            fetch(`http://127.0.0.1:8081/`,{
+            fetch(`http://127.0.0.1:8081/shop`,{
             method: 'GET'
             }).then(res => res.text()).then(
             data => {
@@ -24,7 +24,7 @@ class Page2 extends React.Component{
         }
 
         getJsonData(){ //请求数据函数
-                fetch(`http://127.0.0.1:8081/get`,{
+                fetch(`http://127.0.0.1:8081/shop/get`,{
                 method: 'GET'
                 }).then(res => res.json()).then(
                 data => {
@@ -64,7 +64,7 @@ class Page2 extends React.Component{
                         date : `${moment().format("YYYY年MM月DD日")}`,
                         editHandle:false
                     }
-                    fetch(`http://127.0.0.1:8081/add`,{
+                    fetch(`http://127.0.0.1:8081/shop/add`,{
                         method: 'POST',
                         headers:{
                             'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ class Page2 extends React.Component{
                             name:this.state.myjson[idx].name,
                             price:this.state.myjson[idx].price
                         }
-                        fetch(`http://127.0.0.1:8081/edit`,{
+                        fetch(`http://127.0.0.1:8081/shop/edit`,{
                         method: 'POST',
                         headers:{
                             'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ class Page2 extends React.Component{
                 }
 
                 delHandle(idx){
-                    fetch(`http://127.0.0.1:8081/delete`,{
+                    fetch(`http://127.0.0.1:8081/shop/delete`,{
                         method: 'POST',
                         headers:{
                             'Content-Type': 'application/json',

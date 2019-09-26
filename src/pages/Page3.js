@@ -9,7 +9,7 @@ class Page3 extends React.Component{
       };
     
         getData(name){
-            fetch(`http://127.0.0.1:8081/get?name=${name || ''}`,{
+            fetch(`http://127.0.0.1:8081/shop/get?name=${name || ''}`,{
             method: 'GET'
             }).then(res => res.json()).then(
             data => {
