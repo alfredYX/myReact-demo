@@ -23,7 +23,8 @@ import  "./page1.css"
 class Page1 extends React.Component{
     state = {
         loading: false,
-        picture: ''
+        pictureList: [],
+        pictureUrlList:[]
     }
     handleChange = info => {
         if (info.file.status === 'uploading') {
@@ -43,21 +44,31 @@ class Page1 extends React.Component{
       getImgData(){ //请求图片数据
         fetch(`http://127.0.0.1:8081/home/getImg`,{
         method: 'GET',
+        // responseType: 'blob'
+        })
+        .then(res => res.json()).then(data => {
+           if(data.code === 200){
+               let {imgsUrl} = data.data
+               this.setState({pictureList:imgsUrl})
+               this.state.pictureList.forEach ( t => {
+                   this.getImgUrl(t.imsrc)
+               })
+           }
+        }).catch(e => console.log('错误:', e))
+      }
+
+      getImgUrl(pictureUrl){ //请求图片路径
+        fetch(`http://127.0.0.1:8081/home/getImgUrl/${pictureUrl || ''}`,{
+        method: 'GET',
         responseType: 'blob'
         }).then(res => {
-            console.info(res)
             if(res.status === 200){
-                this.setState({picture:res.url})  
+                this.state.pictureUrlList.push(res.url)
+                this.setState({pictureUrlList:this.state.pictureUrlList})
             }
         }).catch(e => console.log('错误:', e))
-        // }).then(res => res.json()).then(data => {
-        //    console.info(data)
-        //    if(data.code === 200){
-        //        let {imgUrl} = data.data
-        //        this.setState({picture:imgUrl})  
-        //    }
-        // }).catch(e => console.log('错误:', e))
       }
+      
 
       componentWillMount(){
         this.getImgData()
@@ -70,7 +81,7 @@ render(){
           <Icon type={this.state.loading ? 'loading' : 'plus'} />
           <div className="ant-upload-text">Upload</div>
         </div>
-      );
+      )
 return(
 <div>
     <div className="page1Style" style={page1Style}>This is Page1!</div>
@@ -89,7 +100,11 @@ return(
       >
         {this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
       </Upload>
-      <img src={this.state.picture} alt="avatar" style={{ width: '100%' }} />
+      {this.state.pictureUrlList.map ( (item, idx) => {
+          return  (
+            <img src={item} key={idx} alt="img" style={{ width: '50%',height:'50%', borderWidth: '1px', borderStyle: 'dashed',borderColor:'#ccc', padding: '5px'}} />
+         )
+      })}
 </div>
 </div>
 )
